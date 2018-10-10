@@ -1,0 +1,31 @@
+FROM alpine:3.7
+
+# Layers that should not change between builds
+
+# Creating an unnamed user
+RUN adduser -D -u 1001 runner
+# Set working directory (creating it if does not exist)
+WORKDIR /app
+# Inform Docker of the listening network port
+EXPOSE 8080 8081
+# 
+RUN chown -R 1001:runner /app
+
+# Layers that do not have to change too often between builds
+
+# Copy Docker entry point file and set owner to good user
+COPY --chown=1001:runner docker/entrypoint.sh .
+RUN chmod +x entrypoint.sh
+# Install certificate for https
+RUN apk add --no-cache ca-certificates
+
+# Layers that change between builds
+
+# Copy application binary file and set owner to good user
+COPY --chown=1001:runner api-klit .
+RUN chmod +x api-klit
+# Set user when running the image
+USER 1001
+# Run
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["./api-klit"]
