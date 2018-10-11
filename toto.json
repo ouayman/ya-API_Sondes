@@ -1,0 +1,1 @@
+{"api":{"host":"localhost","port":8080,"timeoutSec":{"read":15,"write":15,"idle":60}},"monitoring":{"host":"localhost","port":8081,"timeoutSec":{"read":15,"write":15,"idle":60}}}
